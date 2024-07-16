@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 interface newsType {
     id_news: number,
@@ -21,7 +22,6 @@ export default function NewsManagement() {
                         const url = URL.createObjectURL(res.data)
                         n.ilustrate = url;
                     }
-
                     setNews(resData)
                 }
             })
@@ -65,6 +65,8 @@ export default function NewsManagement() {
 }
 
 const NewsDisplay = ({ news, setIlustrate }: { news?: newsType[]; setIlustrate: React.Dispatch<React.SetStateAction<string>> }): (JSX.Element[] | undefined) => {
+    const navigate = useNavigate()
+    const updateHandle = (news: newsType) => navigate("/update-news", { state: news })
     const deleteNews = async (id: number) => {
         try {
             const res = await axios.delete("http://localhost:1000/api/v1/news/" + id)
@@ -76,16 +78,16 @@ const NewsDisplay = ({ news, setIlustrate }: { news?: newsType[]; setIlustrate: 
     }
 
     return news?.map((n, i) => {
-        return <tr key={i}>
+        return <tr className="hover:bg-sky-300" key={i}>
             <td className="border-2 border-black p-0.5 text-center">{i + 1}</td>
-            <td className="border-2 border-black p-0.5 text-center">{n.title}</td>
+            <td className="border-2 border-black p-0.5 text-center cursor-pointer hover:text-sky-600">{n.title}</td>
             <td className="border-2 border-black p-0.5 text-center">{n.category}</td>
             <td className="border-2 border-black p-0.5 text-center">
                 12/23/2024
             </td>
             <td className="border-2 border-black p-0.5 text-center">
                 <div className="flex justify-center flex-wrap gap-2 w-full">
-                    <button className="w-20 px-2 py-0.5 rounded bg-emerald-500">Update</button>
+                    <button onClick={() => updateHandle(n)} className="w-20 px-2 py-0.5 rounded bg-emerald-500">Update</button>
                     <button onClick={() => setIlustrate(n.ilustrate)} className="w-20 px-2 py-0.5 rounded bg-orange-500 ">Ilustrate</button>
                     <button onClick={() => deleteNews(n.id_news)} className="w-20 px-2 py-0.5 rounded bg-red-500 ">Delete</button>
                 </div>

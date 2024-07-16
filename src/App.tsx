@@ -4,6 +4,7 @@ import Home from "./pages/Home"
 import Login from "./pages/Login"
 import TambahNews from "./pages/news/Tambah"
 import NewsManagement from "./pages/news/Management"
+import UpdateNews from "./pages/news/Update"
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -13,6 +14,7 @@ const router = createBrowserRouter(
         <Route index element={<Home />} />
         <Route path="manage-news" element={<NewsManagement />} />
         <Route path="tambah-news" element={<TambahNews />} />
+        <Route path="update-news" element={<UpdateNews />} />
       </Route>
     </>
   )
