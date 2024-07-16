@@ -9,36 +9,62 @@ interface newsType {
 
 export default function NewsManagement() {
     const [news, setNews] = useState<Array<newsType>>()
+    const [ilustrate, setIlustrate] = useState<string>("")
 
     useEffect(() => {
         axios.get("http://localhost:1000/api/v1/news")
-            .then(res => {
-                console.log(res.data);
-                setNews(res.data)
+            .then(async res => {
+                const resData: newsType[] = res.data
+                if (resData && resData.length > 0) {
+                    for (const n of resData) {
+                        const res = await axios.get(n.ilustrate, { responseType: "blob" })
+                        const url = URL.createObjectURL(res.data)
+                        n.ilustrate = url;
+                    }
+
+                    setNews(resData)
+                }
             })
+
+        return () => {
+            if (news?.length) {
+                news.forEach(n => {
+                    URL.revokeObjectURL(n.ilustrate)
+                })
+            }
+        }
     }, [])
 
 
-    return <div className="p-5 w-full">
-        <h2 className="font-bold text-3xl text-center">Manage News</h2>
-        <table className="w-full mt-3">
-            <thead>
-                <tr className="text-white bg-black">
-                    <th className="border-2 border-black w-1/12">#</th>
-                    <th className="border-2 border-black w-5/12">Judul</th>
-                    <th className="border-2 border-black w-2/12">Kategori</th>
-                    <th className="border-2 border-black w-1/12">CreatedAt</th>
-                    <th className="border-2 border-black w-3/12">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <NewsDisplay news={news} />
-            </tbody>
-        </table>
-    </div>
+    return <>
+        <div className="p-5 w-full">
+            <h2 className="font-bold text-3xl text-center">Manage News</h2>
+            <table className="w-full mt-3">
+                <thead>
+                    <tr className="text-white bg-black">
+                        <th className="border-2 border-black w-1/12">#</th>
+                        <th className="border-2 border-black w-5/12">Judul</th>
+                        <th className="border-2 border-black w-2/12">Kategori</th>
+                        <th className="border-2 border-black w-1/12">CreatedAt</th>
+                        <th className="border-2 border-black w-3/12">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <NewsDisplay news={news} setIlustrate={setIlustrate} />
+                </tbody>
+            </table>
+        </div>
+
+        {
+            ilustrate && news && news.length &&
+            <div onClick={() => setIlustrate("")} className="fixed inset-0 backdrop-blur-sm flex items-center justify-center">
+                <img src={ilustrate} alt="ilustrasi" className="w-2/5" />
+            </div>
+        }
+    </>
 }
 
-const NewsDisplay = ({ news }: { news?: newsType[] }): (JSX.Element[] | undefined) => {
+const NewsDisplay = ({ news, setIlustrate }: { news?: newsType[]; setIlustrate: React.Dispatch<React.SetStateAction<string>> }): (JSX.Element[] | undefined) => {
     const deleteNews = async (id: number) => {
         try {
             const res = await axios.delete("http://localhost:1000/api/v1/news/" + id)
@@ -60,7 +86,7 @@ const NewsDisplay = ({ news }: { news?: newsType[] }): (JSX.Element[] | undefine
             <td className="border-2 border-black p-0.5 text-center">
                 <div className="flex justify-center flex-wrap gap-2 w-full">
                     <button className="w-20 px-2 py-0.5 rounded bg-emerald-500">Update</button>
-                    <button className="w-20 px-2 py-0.5 rounded bg-orange-500 ">Ilustrate</button>
+                    <button onClick={() => setIlustrate(n.ilustrate)} className="w-20 px-2 py-0.5 rounded bg-orange-500 ">Ilustrate</button>
                     <button onClick={() => deleteNews(n.id_news)} className="w-20 px-2 py-0.5 rounded bg-red-500 ">Delete</button>
                 </div>
             </td>
