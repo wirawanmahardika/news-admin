@@ -38,7 +38,7 @@ export default function Dashboard() {
               Logout
             </button>
           </div>
-          <Outlet context={""} />
+          <Outlet />
         </div>
       </div>
     </>
