@@ -6,7 +6,7 @@ import { Bounce, toast, ToastContainer } from "react-toastify";
 interface newsType {
     id_news: number,
     title: string, category: string,
-    ilustrate: string
+    ilustrate: string, url: string
 }
 
 export default function NewsManagement() {
@@ -91,7 +91,7 @@ const NewsDisplay = ({ news, setIlustrate }: { news?: newsType[]; setIlustrate: 
     return news?.map((n, i) => {
         return <tr className="hover:bg-sky-300" key={i}>
             <td className="border-2 border-black p-0.5 text-center">{i + 1}</td>
-            <td className="border-2 border-black p-0.5 text-center cursor-pointer hover:text-sky-600">{n.title}</td>
+            <td className="border-2 border-black p-0.5 text-center cursor-pointer hover:text-sky-600"><a href={n.url}> {n.title}</a></td>
             <td className="border-2 border-black p-0.5 text-center">{n.category}</td>
             <td className="border-2 border-black p-0.5 text-center">
                 12/23/2024

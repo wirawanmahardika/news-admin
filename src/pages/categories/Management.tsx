@@ -7,7 +7,7 @@ interface categoryType {
     id_category_news: number,
     category: string,
     ilustrate: string,
-    created_at: string
+    created_at: string, url: string
 }
 
 export default function CategoryManagement() {
@@ -91,7 +91,9 @@ const CategoriesDisplay = ({ categories, setIlustrate }: { categories?: category
     return categories?.map((n, i) => {
         return <tr className="hover:bg-sky-300" key={i}>
             <td className="border-2 border-black p-0.5 text-center">{i + 1}</td>
-            <td className="border-2 border-black p-0.5 text-center cursor-pointer hover:text-sky-600">{n.category}</td>
+            <td className="border-2 border-black p-0.5 text-center cursor-pointer hover:text-sky-600">
+                <a href={n.url}>{n.category}</a>
+            </td>
             <td className="border-2 border-black p-0.5 text-center">
                 {n.created_at}
             </td>

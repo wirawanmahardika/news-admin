@@ -3,12 +3,14 @@ import { useEffect, useState } from "react"
 
 
 interface newsType {
+    url: string
     id_news: number,
     title: string, category: string,
     ilustrate: string
 }
 
 interface categoryType {
+    url: string
     id_category_news: number,
     category: string,
     ilustrate: string,
@@ -69,14 +71,14 @@ export default function Home() {
 
 
     const displayCategories = categories?.map((n) => {
-        return <div key={n.id_category_news} className="rounded flex flex-col gap-y-1 text-center border-2 border-black cursor-pointer">
+        return <div onClick={() => window.location.href = n.url} key={n.id_category_news} className="rounded flex flex-col gap-y-1 text-center border-2 border-black cursor-pointer">
             <img src={n.ilustrate} alt={n.category} />
             <span className="font-semibold text-lg">{n.category}</span>
         </div>
     })
 
     const displayNews = news?.map(n => {
-        return <div key={n.id_news} className="rounded flex flex-col gap-y-1 text-center border-2 border-black cursor-pointer">
+        return <div onClick={() => window.location.href = n.url} key={n.id_news} className="rounded flex flex-col gap-y-1 text-center border-2 border-black cursor-pointer">
             <img src={n.ilustrate} alt={n.category} />
             <span>{n.title}</span>
         </div>
