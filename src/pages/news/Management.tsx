@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Bounce, toast, ToastContainer } from "react-toastify";
 
 interface newsType {
     id_news: number,
@@ -37,6 +38,7 @@ export default function NewsManagement() {
 
 
     return <>
+        <ToastContainer />
         <div className="p-5 w-full">
             <h2 className="font-bold text-3xl text-center">Manage News</h2>
             <table className="w-full mt-3">
@@ -70,8 +72,17 @@ const NewsDisplay = ({ news, setIlustrate }: { news?: newsType[]; setIlustrate: 
     const deleteNews = async (id: number) => {
         try {
             const res = await axios.delete("http://localhost:1000/api/v1/news/" + id)
-            console.log(res.data);
-
+            toast.success(res.data, {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                transition: Bounce,
+            });
         } catch (error: any) {
             console.log(error);
         }
