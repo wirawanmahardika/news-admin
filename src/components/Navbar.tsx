@@ -23,6 +23,11 @@ export default function Navbar() {
         <Link to={"/manage-news"}>Manage</Link>
         <Link to={"/tambah-news"}>Tambah</Link>
       </NavigationGroup>
+
+      <NavigationGroup height="h-14" name="Category">
+        <Link to={"/manage-category"}>Manage</Link>
+        <Link to={"/tambah-category"}>Tambah</Link>
+      </NavigationGroup>
     </nav>
   );
 }

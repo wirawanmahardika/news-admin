@@ -7,11 +7,9 @@ export default function useFetch(url: string) {
     useEffect(() => {
         axios.get(url)
             .then(res => {
-
-                setData(res.data.data)
+                setData(res.data || res.data.data)
             }).catch(err => {
                 console.log(err);
-
             })
     }, [])
 

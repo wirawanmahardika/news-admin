@@ -9,7 +9,6 @@ export default function UpdateNews() {
     const { state } = useLocation()
     const categories = useFetch("http://localhost:1000/api/v1/category-news")
 
-    console.log(state);
     useEffect(() => {
         if (!state) navigate(-1)
     }, [])
@@ -40,19 +39,7 @@ export default function UpdateNews() {
 
 
     return <>
-        <ToastContainer
-            position="top-center"
-            autoClose={5000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="dark"
-            transition={Bounce}
-        />
+        <ToastContainer />
 
         <form onSubmit={handlePost} className="flex flex-col gap-y-3 w-full min-h-44 items-center p-5">
             <h2 className="font-bold text-4xl mt-10">Update Berita</h2>
