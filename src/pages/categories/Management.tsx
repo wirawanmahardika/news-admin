@@ -71,6 +71,9 @@ const CategoriesDisplay = ({ categories, setIlustrate }: { categories?: category
     const updateHandle = (category: categoryType) => navigate("/update-category", { state: category })
     const deleteNews = async (id: number) => {
         try {
+            if (!confirm("Anda yakin ingin menghapus kategori berita tersebut??"))
+                return
+
             const res = await axios.delete("http://localhost:1000/api/v1/category-news/" + id)
             toast.success(res.data, {
                 position: "top-center",

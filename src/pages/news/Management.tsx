@@ -71,6 +71,9 @@ const NewsDisplay = ({ news, setIlustrate }: { news?: newsType[]; setIlustrate: 
     const updateHandle = (news: newsType) => navigate("/update-news", { state: news })
     const deleteNews = async (id: number) => {
         try {
+            if (!confirm("Anda yaking ingin menghapus berita tersebut??"))
+                return
+
             const res = await axios.delete("http://localhost:1000/api/v1/news/" + id)
             toast.success(res.data, {
                 position: "top-center",
