@@ -1,16 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Bounce, toast, ToastContainer } from "react-toastify";
-
-interface newsType {
-    id_news: number,
-    title: string, category: string,
-    ilustrate: string, url: string
-}
+import { newsType } from "../../types/news";
+import { newsActionReducer, newsReducer } from "../../reducer/news";
 
 export default function NewsManagement() {
-    const [news, setNews] = useState<Array<newsType>>()
+    // const [news, setNews] = useState<Array<newsType>>()
+    const [news, dispatch] = useReducer(newsReducer, [])
     const [ilustrate, setIlustrate] = useState<string>("")
 
     useEffect(() => {
@@ -23,13 +20,13 @@ export default function NewsManagement() {
                         const url = URL.createObjectURL(res.data)
                         n.ilustrate = url;
                     }
-                    setNews(resData)
+                    dispatch({ type: "add-all", payload: { news: resData } })
                 }
             })
 
         return () => {
             if (news?.length) {
-                news.forEach(n => {
+                news.forEach((n) => {
                     URL.revokeObjectURL(n.ilustrate)
                 })
             }
@@ -52,7 +49,7 @@ export default function NewsManagement() {
                     </tr>
                 </thead>
                 <tbody>
-                    <NewsDisplay news={news} setIlustrate={setIlustrate} />
+                    <NewsDisplay news={news} setIlustrate={setIlustrate} dispatch={dispatch} />
                 </tbody>
             </table>
         </div>
@@ -66,7 +63,11 @@ export default function NewsManagement() {
     </>
 }
 
-const NewsDisplay = ({ news, setIlustrate }: { news?: newsType[]; setIlustrate: React.Dispatch<React.SetStateAction<string>> }): (JSX.Element[] | undefined) => {
+const NewsDisplay = ({ news, setIlustrate, dispatch }: {
+    news?: newsType[];
+    setIlustrate: React.Dispatch<React.SetStateAction<string>>;
+    dispatch: React.Dispatch<newsActionReducer>
+}): (JSX.Element[] | undefined) => {
     const navigate = useNavigate()
     const updateHandle = (news: newsType) => navigate("/update-news", { state: news })
     const deleteNews = async (id: number) => {
@@ -86,6 +87,9 @@ const NewsDisplay = ({ news, setIlustrate }: { news?: newsType[]; setIlustrate: 
                 theme: "dark",
                 transition: Bounce,
             });
+
+            if (res.status < 300)
+                dispatch({ type: "delete", payload: { id_news: id } })
         } catch (error: any) {
             console.log(error);
         }

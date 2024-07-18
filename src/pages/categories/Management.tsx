@@ -1,17 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Bounce, toast, ToastContainer } from "react-toastify";
-
-interface categoryType {
-    id_category_news: number,
-    category: string,
-    ilustrate: string,
-    created_at: string, url: string
-}
+import { categoryType } from "../../types/category";
+import { categoryActionReducer, categoryReducer } from "../../reducer/category";
 
 export default function CategoryManagement() {
-    const [categories, setCategories] = useState<Array<categoryType>>()
+    // const [categories, setCategories] = useState<Array<categoryType>>()
+    const [categories, dispatch] = useReducer(categoryReducer, [])
+
     const [ilustrate, setIlustrate] = useState<string>("")
 
     useEffect(() => {
@@ -24,7 +21,7 @@ export default function CategoryManagement() {
                         const url = URL.createObjectURL(res.data)
                         n.ilustrate = url;
                     }
-                    setCategories(resData)
+                    dispatch({ type: "add-all", payload: { categories: resData } })
                 }
             })
 
@@ -52,7 +49,7 @@ export default function CategoryManagement() {
                     </tr>
                 </thead>
                 <tbody>
-                    <CategoriesDisplay categories={categories} setIlustrate={setIlustrate} />
+                    <CategoriesDisplay dispatch={dispatch} categories={categories} setIlustrate={setIlustrate} />
                 </tbody>
             </table>
         </div>
@@ -66,7 +63,11 @@ export default function CategoryManagement() {
     </>
 }
 
-const CategoriesDisplay = ({ categories, setIlustrate }: { categories?: categoryType[]; setIlustrate: React.Dispatch<React.SetStateAction<string>> }): (JSX.Element[] | undefined) => {
+const CategoriesDisplay = ({ categories, setIlustrate, dispatch }: {
+    categories?: categoryType[];
+    setIlustrate: React.Dispatch<React.SetStateAction<string>>;
+    dispatch: React.Dispatch<categoryActionReducer>
+}): (JSX.Element[] | undefined) => {
     const navigate = useNavigate()
     const updateHandle = (category: categoryType) => navigate("/update-category", { state: category })
     const deleteNews = async (id: number) => {
@@ -86,6 +87,10 @@ const CategoriesDisplay = ({ categories, setIlustrate }: { categories?: category
                 theme: "dark",
                 transition: Bounce,
             });
+
+            if (res.status < 300)
+                dispatch({ type: "delete", payload: { id_category_news: id } })
+
         } catch (error: any) {
             console.log(error);
         }
