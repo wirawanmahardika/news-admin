@@ -19,10 +19,9 @@ export default function UpdateNews() {
         const formData = new FormData(e.target)
         formData.append("id_news", state.id_news)
 
-        const res = await axios.patch("http://localhost:1000/api/v1/news", formData,
-            { headers: { "Content-Type": "multipart/form-data" } })
-
-        if (res.status < 300) {
+        try {
+            const res = await axios.patch("http://localhost:1000/api/v1/news", formData,
+                { headers: { "Content-Type": "multipart/form-data" } })
             toast.success(res.data, {
                 position: "top-center",
                 autoClose: 5000,
@@ -34,6 +33,19 @@ export default function UpdateNews() {
                 theme: "dark",
                 transition: Bounce,
             });
+        } catch (error: any) {
+            if (!error.response) return;
+            toast.error(error.response?.data, {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                transition: Bounce,
+            })
         }
     }
 

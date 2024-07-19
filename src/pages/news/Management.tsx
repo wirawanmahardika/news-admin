@@ -6,7 +6,6 @@ import { newsType } from "../../types/news";
 import { newsActionReducer, newsReducer } from "../../reducer/news";
 
 export default function NewsManagement() {
-    // const [news, setNews] = useState<Array<newsType>>()
     const [news, dispatch] = useReducer(newsReducer, [])
     const [ilustrate, setIlustrate] = useState<string>("")
 
@@ -72,9 +71,7 @@ const NewsDisplay = ({ news, setIlustrate, dispatch }: {
     const updateHandle = (news: newsType) => navigate("/update-news", { state: news })
     const deleteNews = async (id: number) => {
         try {
-            if (!confirm("Anda yaking ingin menghapus berita tersebut??"))
-                return
-
+            if (!confirm("Anda yakin ingin menghapus berita tersebut??")) return
             const res = await axios.delete("http://localhost:1000/api/v1/news/" + id)
             toast.success(res.data, {
                 position: "top-center",
@@ -87,11 +84,20 @@ const NewsDisplay = ({ news, setIlustrate, dispatch }: {
                 theme: "dark",
                 transition: Bounce,
             });
-
-            if (res.status < 300)
-                dispatch({ type: "delete", payload: { id_news: id } })
+            dispatch({ type: "delete", payload: { id_news: id } })
         } catch (error: any) {
-            console.log(error);
+            if (!error.response) return;
+            toast.error(error.response?.data, {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                transition: Bounce,
+            })
         }
     }
 

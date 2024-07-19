@@ -16,10 +16,9 @@ export default function UpdateCategory() {
         const formData = new FormData(e.target)
         formData.append("id_category_news", state.id_category_news)
 
-        const res = await axios.patch("http://localhost:1000/api/v1/category-news",
-            formData, { headers: { "Content-Type": "multipart/form-data" } })
-
-        if (res.status < 300) {
+        try {
+            const res = await axios.patch("http://localhost:1000/api/v1/category-news",
+                formData, { headers: { "Content-Type": "multipart/form-data" } })
             toast.success(res.data, {
                 position: "top-center",
                 autoClose: 5000,
@@ -31,8 +30,20 @@ export default function UpdateCategory() {
                 theme: "dark",
                 transition: Bounce,
             });
+        } catch (error: any) {
+            if (!error.response) return;
+            toast.error(error.response?.data, {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                transition: Bounce,
+            })
         }
-
     }
 
     return <>

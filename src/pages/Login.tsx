@@ -1,18 +1,47 @@
-import {
-  Form,
-  NavLink,
-} from "react-router-dom";
+import axios from "axios";
+import { NavLink } from "react-router-dom";
+import { Bounce, toast, ToastContainer } from "react-toastify";
 
 export default function Login() {
+  const handleSubmit = async (e: any) => {
+    e.preventDefault()
+    const data = {
+      username: e.target.username.value,
+      password: e.target.password.value
+    }
 
-  // useEffect(() => {
-  //   myAxios.get("/api/users/getme").then(() => {
-  //     navigate("/");
-  //   });
-  // }, []);
+    try {
+      const res = await axios.post("http://localhost:1000/api/v1/login", data, { withCredentials: true })
+      toast.success(res.data, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Bounce,
+      });
+    } catch (error: any) {
+      if (!error.response) return;
+      toast.error(error.response?.data, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Bounce,
+      })
+    }
+  }
 
   return (
     <>
+      <ToastContainer />
       <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img
@@ -20,13 +49,23 @@ export default function Login() {
             src={"/logo.png"}
             alt="Toko Sedia"
           />
-          <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+          <h2
+            onClick={async () => {
+              try {
+                const res = await axios.get("http://localhost:1000/api/v1/new", { withCredentials: true })
+                console.log(res.data);
+
+              } catch (error) {
+                console.log(error);
+              }
+            }}
+            className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Log in to your account
           </h2>
         </div>
 
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <Form className="space-y-6" method="POST">
+        <div onSubmit={handleSubmit} className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+          <form className="space-y-6">
             <div>
               <label
                 htmlFor="username"
@@ -83,7 +122,7 @@ export default function Login() {
                 Sign in
               </button>
             </div>
-          </Form>
+          </form>
 
           <p className="mt-10 text-center text-sm text-gray-500">
             <NavLink
@@ -98,26 +137,3 @@ export default function Login() {
     </>
   );
 }
-
-// export const loginAction = async ({ request }: ActionFunctionArgs) => {
-//   const data = Object.fromEntries(await request.formData());
-//   try {
-//     const res = await myAxios.post("/api/users/login", data, {
-//       withCredentials: true,
-//     });
-
-//     return {
-//       status: res.status,
-//       message: res.data.message,
-//     };
-//   } catch (error: any) {
-//     console.log(error.response);
-//     if (error.response) {
-//       return {
-//         status: error.response.status,
-//         message: error.response.data.description,
-//         place: error.response.data.place,
-//       };
-//     }
-//   }
-// };

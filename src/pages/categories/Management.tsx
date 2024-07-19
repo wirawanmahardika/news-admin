@@ -6,9 +6,7 @@ import { categoryType } from "../../types/category";
 import { categoryActionReducer, categoryReducer } from "../../reducer/category";
 
 export default function CategoryManagement() {
-    // const [categories, setCategories] = useState<Array<categoryType>>()
     const [categories, dispatch] = useReducer(categoryReducer, [])
-
     const [ilustrate, setIlustrate] = useState<string>("")
 
     useEffect(() => {
@@ -72,9 +70,7 @@ const CategoriesDisplay = ({ categories, setIlustrate, dispatch }: {
     const updateHandle = (category: categoryType) => navigate("/update-category", { state: category })
     const deleteNews = async (id: number) => {
         try {
-            if (!confirm("Anda yakin ingin menghapus kategori berita tersebut??"))
-                return
-
+            if (!confirm("Anda yakin ingin menghapus kategori berita tersebut??")) return;
             const res = await axios.delete("http://localhost:1000/api/v1/category-news/" + id)
             toast.success(res.data, {
                 position: "top-center",
@@ -87,12 +83,20 @@ const CategoriesDisplay = ({ categories, setIlustrate, dispatch }: {
                 theme: "dark",
                 transition: Bounce,
             });
-
-            if (res.status < 300)
-                dispatch({ type: "delete", payload: { id_category_news: id } })
-
+            dispatch({ type: "delete", payload: { id_category_news: id } })
         } catch (error: any) {
-            console.log(error);
+            if (!error.response) return;
+            toast.error(error.response?.data, {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                transition: Bounce,
+            })
         }
     }
 
