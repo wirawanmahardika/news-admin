@@ -1,5 +1,5 @@
-import axios from "axios";
 import { Bounce, toast, ToastContainer } from "react-toastify";
+import { myAxios } from "../../utils/axios";
 
 export default function TambahCategory() {
     const handlePost = async (e: any) => {
@@ -7,7 +7,7 @@ export default function TambahCategory() {
         const formData = new FormData(e.target)
 
         try {
-            const res = await axios.post("http://localhost:1000/api/v1/category-news",
+            const res = await myAxios.post("http://localhost:1000/api/v1/category-news",
                 formData, { headers: { "Content-Type": "multipart/form-data" } })
             toast.success(res.data, {
                 position: "top-center",

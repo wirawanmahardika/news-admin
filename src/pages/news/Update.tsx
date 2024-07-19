@@ -1,8 +1,8 @@
 import { useLocation, useNavigate } from "react-router-dom"
 import useFetch from "../../hooks/useFetch"
 import { useEffect } from "react";
-import axios from "axios";
 import { Bounce, toast, ToastContainer } from "react-toastify";
+import { myAxios } from "../../utils/axios";
 
 export default function UpdateNews() {
     const navigate = useNavigate()
@@ -20,7 +20,7 @@ export default function UpdateNews() {
         formData.append("id_news", state.id_news)
 
         try {
-            const res = await axios.patch("http://localhost:1000/api/v1/news", formData,
+            const res = await myAxios.patch("http://localhost:1000/api/v1/news", formData,
                 { headers: { "Content-Type": "multipart/form-data" } })
             toast.success(res.data, {
                 position: "top-center",

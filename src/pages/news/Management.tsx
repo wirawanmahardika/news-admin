@@ -1,21 +1,21 @@
 import { useEffect, useReducer, useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import { newsType } from "../../types/news";
 import { newsActionReducer, newsReducer } from "../../reducer/news";
+import { myAxios } from "../../utils/axios";
 
 export default function NewsManagement() {
     const [news, dispatch] = useReducer(newsReducer, [])
     const [ilustrate, setIlustrate] = useState<string>("")
 
     useEffect(() => {
-        axios.get("http://localhost:1000/api/v1/news")
+        myAxios.get("http://localhost:1000/api/v1/news")
             .then(async res => {
                 const resData: newsType[] = res.data
                 if (resData && resData.length > 0) {
                     for (const n of resData) {
-                        const res = await axios.get(n.ilustrate, { responseType: "blob" })
+                        const res = await myAxios.get(n.ilustrate, { responseType: "blob" })
                         const url = URL.createObjectURL(res.data)
                         n.ilustrate = url;
                     }
@@ -72,7 +72,7 @@ const NewsDisplay = ({ news, setIlustrate, dispatch }: {
     const deleteNews = async (id: number) => {
         try {
             if (!confirm("Anda yakin ingin menghapus berita tersebut??")) return
-            const res = await axios.delete("http://localhost:1000/api/v1/news/" + id)
+            const res = await myAxios.delete("http://localhost:1000/api/v1/news/" + id)
             toast.success(res.data, {
                 position: "top-center",
                 autoClose: 5000,

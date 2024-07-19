@@ -1,5 +1,5 @@
-import axios from "axios"
 import { useEffect, useState } from "react"
+import { myAxios } from "../utils/axios"
 
 
 interface newsType {
@@ -21,12 +21,12 @@ interface categoryType {
 export default function Home() {
     const [news, setNews] = useState<Array<newsType>>()
     useEffect(() => {
-        axios.get("http://localhost:1000/api/v1/news")
+        myAxios.get("http://localhost:1000/api/v1/news")
             .then(async res => {
                 const resData: newsType[] = res.data
                 if (resData && resData.length > 0) {
                     for (const n of resData) {
-                        const res = await axios.get(n.ilustrate, { responseType: "blob" })
+                        const res = await myAxios.get(n.ilustrate, { responseType: "blob" })
                         const url = URL.createObjectURL(res.data)
                         n.ilustrate = url;
                     }
@@ -46,12 +46,12 @@ export default function Home() {
 
     const [categories, setCategories] = useState<Array<categoryType>>()
     useEffect(() => {
-        axios.get("http://localhost:1000/api/v1/category-news")
+        myAxios.get("http://localhost:1000/api/v1/category-news")
             .then(async res => {
                 const resData: categoryType[] = res.data
                 if (resData && resData.length > 0) {
                     for (const n of resData) {
-                        const res = await axios.get(n.ilustrate, { responseType: "blob" })
+                        const res = await myAxios.get(n.ilustrate, { responseType: "blob" })
                         const url = URL.createObjectURL(res.data)
                         n.ilustrate = url;
                     }

@@ -1,6 +1,6 @@
-import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { Bounce, toast, ToastContainer } from "react-toastify";
+import { myAxios } from "../utils/axios";
 
 export default function Login() {
   const handleSubmit = async (e: any) => {
@@ -11,7 +11,7 @@ export default function Login() {
     }
 
     try {
-      const res = await axios.post("http://localhost:1000/api/v1/login", data, { withCredentials: true })
+      const res = await myAxios.post("http://localhost:1000/api/v1/login", data, { withCredentials: true })
       toast.success(res.data, {
         position: "top-center",
         autoClose: 5000,
@@ -52,7 +52,7 @@ export default function Login() {
           <h2
             onClick={async () => {
               try {
-                const res = await axios.get("http://localhost:1000/api/v1/new", { withCredentials: true })
+                const res = await myAxios.get("http://localhost:1000/api/v1/new", { withCredentials: true })
                 console.log(res.data);
 
               } catch (error) {

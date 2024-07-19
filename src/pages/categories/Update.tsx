@@ -1,7 +1,7 @@
-import axios from "axios";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Bounce, toast, ToastContainer } from "react-toastify";
+import { myAxios } from "../../utils/axios";
 
 export default function UpdateCategory() {
     const navigate = useNavigate()
@@ -17,7 +17,7 @@ export default function UpdateCategory() {
         formData.append("id_category_news", state.id_category_news)
 
         try {
-            const res = await axios.patch("http://localhost:1000/api/v1/category-news",
+            const res = await myAxios.patch("http://localhost:1000/api/v1/category-news",
                 formData, { headers: { "Content-Type": "multipart/form-data" } })
             toast.success(res.data, {
                 position: "top-center",

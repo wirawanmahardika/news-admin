@@ -1,21 +1,21 @@
 import { useEffect, useReducer, useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import { categoryType } from "../../types/category";
 import { categoryActionReducer, categoryReducer } from "../../reducer/category";
+import { myAxios } from "../../utils/axios";
 
 export default function CategoryManagement() {
     const [categories, dispatch] = useReducer(categoryReducer, [])
     const [ilustrate, setIlustrate] = useState<string>("")
 
     useEffect(() => {
-        axios.get("http://localhost:1000/api/v1/category-news")
+        myAxios.get("http://localhost:1000/api/v1/category-news")
             .then(async res => {
                 const resData: categoryType[] = res.data
                 if (resData && resData.length > 0) {
                     for (const n of resData) {
-                        const res = await axios.get(n.ilustrate, { responseType: "blob" })
+                        const res = await myAxios.get(n.ilustrate, { responseType: "blob" })
                         const url = URL.createObjectURL(res.data)
                         n.ilustrate = url;
                     }
@@ -71,7 +71,7 @@ const CategoriesDisplay = ({ categories, setIlustrate, dispatch }: {
     const deleteNews = async (id: number) => {
         try {
             if (!confirm("Anda yakin ingin menghapus kategori berita tersebut??")) return;
-            const res = await axios.delete("http://localhost:1000/api/v1/category-news/" + id)
+            const res = await myAxios.delete("http://localhost:1000/api/v1/category-news/" + id)
             toast.success(res.data, {
                 position: "top-center",
                 autoClose: 5000,
