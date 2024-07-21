@@ -49,17 +49,7 @@ export default function Login() {
             src={"/logo.png"}
             alt="Toko Sedia"
           />
-          <h2
-            onClick={async () => {
-              try {
-                const res = await myAxios.get("http://localhost:1000/api/v1/new", { withCredentials: true })
-                console.log(res.data);
-
-              } catch (error) {
-                console.log(error);
-              }
-            }}
-            className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+          <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Log in to your account
           </h2>
         </div>
@@ -93,14 +83,6 @@ export default function Login() {
                 >
                   Password
                 </label>
-                <div className="text-sm">
-                  <a
-                    href="#"
-                    className="font-semibold text-main-1 hover:text-main-1"
-                  >
-                    Forgot password?
-                  </a>
-                </div>
               </div>
               <div className="mt-2">
                 <input

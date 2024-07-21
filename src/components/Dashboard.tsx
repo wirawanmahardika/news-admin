@@ -3,14 +3,17 @@ import Bars3 from "../icons/bars3";
 import Navbar from "./Navbar";
 import { Outlet, useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
+import { myAxios } from "../utils/axios";
+import useAuthenticate from "../hooks/useAuthenticate";
 
 export default function Dashboard() {
+  useAuthenticate()
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const logout = async () => {
-    // await myAxios.delete("/api/users/logout");
-    navigate("/login");
+    const res = await myAxios.delete("/api/v1/logout");
+    if (res.status < 300) navigate("/login");
   };
 
   return (
