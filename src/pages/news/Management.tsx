@@ -8,11 +8,13 @@ import { myAxios } from "../../utils/axios";
 export default function NewsManagement() {
     const [news, dispatch] = useReducer(newsReducer, [])
     const [ilustrate, setIlustrate] = useState<string>("")
+    const [pagination, setPagination] = useState<{ currentPage: number; pages: number[] }>({ currentPage: 1, pages: [] })
 
     useEffect(() => {
-        myAxios.get("http://localhost:1000/api/v1/news")
+        myAxios.get("http://localhost:1000/api/v1/news?page=" + pagination.currentPage)
             .then(async res => {
-                const resData: newsType[] = res.data
+                setPagination({ currentPage: res.data.pagination.currentPage, pages: res.data.pagination.pages })
+                const resData: newsType[] = res.data.news
                 if (resData && resData.length > 0) {
                     for (const n of resData) {
                         const res = await myAxios.get(n.ilustrate, { responseType: "blob" })
@@ -23,6 +25,8 @@ export default function NewsManagement() {
                 }
             })
 
+
+
         return () => {
             if (news?.length) {
                 news.forEach((n) => {
@@ -30,8 +34,7 @@ export default function NewsManagement() {
                 })
             }
         }
-    }, [])
-
+    }, [pagination.currentPage])
 
     return <>
         <ToastContainer />
@@ -51,6 +54,8 @@ export default function NewsManagement() {
                     <NewsDisplay news={news} setIlustrate={setIlustrate} dispatch={dispatch} />
                 </tbody>
             </table>
+
+            <Pagination pagination={pagination} setPagination={setPagination} />
         </div>
 
         {
@@ -60,6 +65,47 @@ export default function NewsManagement() {
             </div>
         }
     </>
+}
+
+type typePagination = {
+    pagination: { currentPage: number; pages: number[] };
+    setPagination: React.Dispatch<React.SetStateAction<{ currentPage: number; pages: number[] }>>;
+}
+const Pagination = ({ pagination, setPagination }: typePagination) => {
+    const prevNavigate = () => {
+        if (pagination.currentPage <= 1) return;
+        setPagination(prev => ({ ...prev, currentPage: prev.currentPage - 1 }))
+    }
+
+    const nextNavigate = () => {
+        if (pagination.currentPage === pagination.pages.length) return;
+        setPagination(prev => ({ ...prev, currentPage: prev.currentPage + 1 }))
+    }
+
+
+    return <div className="w-full mt-10 flex flex-wrap gap-y-1 justify-center">
+        <div onClick={prevNavigate} className="rounded-l border-2 p-1 border-r border-black cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+            </svg>
+        </div>
+        {
+            pagination.pages?.map(e => {
+                return <div
+                    key={e}
+                    className={`p-1 border-x border-y-2 border-black 
+                ${pagination.currentPage == e && "bg-sky-500"}`}
+                >
+                    <button onClick={() => setPagination(prev => ({ ...prev, currentPage: e }))} className="block size-5 text-center">{e}</button>
+                </div>
+            })
+        }
+        <div onClick={nextNavigate} className="rounded-r border-2 p-1 border-l border-black cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+            </svg>
+        </div>
+    </div>
 }
 
 const NewsDisplay = ({ news, setIlustrate, dispatch }: {
