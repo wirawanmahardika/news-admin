@@ -1,21 +1,7 @@
 import { useEffect, useState } from "react"
 import { myAxios } from "../utils/axios"
-
-
-interface newsType {
-    url: string
-    id_news: number,
-    title: string, category: string,
-    ilustrate: string
-}
-
-interface categoryType {
-    url: string
-    id_category_news: number,
-    category: string,
-    ilustrate: string,
-    created_at: string
-}
+import { newsType } from "../types/news"
+import { categoryType } from "../types/category"
 
 
 export default function Home() {
@@ -23,7 +9,7 @@ export default function Home() {
     useEffect(() => {
         myAxios.get("http://localhost:1000/api/v1/news")
             .then(async res => {
-                const resData: newsType[] = res.data
+                const resData: newsType[] = res.data.news
                 if (resData && resData.length > 0) {
                     for (const n of resData) {
                         const res = await myAxios.get(n.ilustrate, { responseType: "blob" })
@@ -68,6 +54,7 @@ export default function Home() {
         }
     }, [])
 
+    console.log(news);
 
 
     const displayCategories = categories?.map((n) => {
@@ -97,19 +84,6 @@ export default function Home() {
 
             <h4 className="text-xl font-poetsenOne text-sky-600 mt-2">Terbaru</h4>
             <div className="grid grid-cols-4 grid-rows-1 gap-4">{displayNews}</div>
-
-            {/* <h4 className="text-xl font-poetsenOne text-sky-600 mt-8">Terlama</h4>
-            <div className="grid grid-cols-4 grid-rows-1 gap-2">
-                <div className="rounded flex flex-col gap-y-1 text-center border-2 border-black cursor-pointer">
-                    <img src="/img/komputer-8.jpg" alt="afd" />
-                    <span>Genosida yang tak terhentikan</span>
-                </div>
-
-                <div className="rounded flex flex-col gap-y-1 text-center border-2 border-black cursor-pointer">
-                    <img src="/img/komputer-8.jpg" alt="afd" />
-                    <span>Genosida yang tak terhentikan</span>
-                </div>
-            </div> */}
         </div>
 
 
