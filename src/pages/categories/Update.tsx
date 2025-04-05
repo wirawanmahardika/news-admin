@@ -17,7 +17,7 @@ export default function UpdateCategory() {
         formData.append("id_category_news", state.id_category_news)
 
         try {
-            const res = await myAxios.patch("http://localhost:1000/api/v1/category-news",
+            const res = await myAxios.patch("/api/v1/category-news",
                 formData, { headers: { "Content-Type": "multipart/form-data" } })
             toast.success(res.data, {
                 position: "top-center",

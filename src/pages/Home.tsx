@@ -26,7 +26,7 @@ export default function Home() {
 const useGetCategoriesElements = () => {
     const [categories, setCategories] = useState<Array<categoryType>>()
     useEffect(() => {
-        myAxios.get("http://localhost:1000/api/v1/category-news")
+        myAxios.get("/api/v1/category-news")
             .then(async res => {
                 const resData: categoryType[] = res.data
                 if (resData && resData.length > 0) {
@@ -59,7 +59,7 @@ const useGetCategoriesElements = () => {
 const useGetNewsElements = () => {
     const [news, setNews] = useState<Array<newsType>>()
     useEffect(() => {
-        myAxios.get("http://localhost:1000/api/v1/news")
+        myAxios.get("/api/v1/news")
             .then(async res => {
                 const resData: newsType[] = res.data.news
                 if (resData && resData.length > 0) {

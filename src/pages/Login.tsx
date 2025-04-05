@@ -11,7 +11,7 @@ export default function Login() {
     }
 
     try {
-      const res = await myAxios.post("http://localhost:1000/api/v1/login", data, { withCredentials: true })
+      const res = await myAxios.post("/api/v1/login", data, { withCredentials: true })
       toast.success(res.data, {
         position: "top-center",
         autoClose: 5000,

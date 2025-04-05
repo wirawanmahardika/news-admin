@@ -7,7 +7,7 @@ import { myAxios } from "../../utils/axios";
 export default function UpdateNews() {
     const navigate = useNavigate()
     const { state } = useLocation()
-    const categories = useFetch("http://localhost:1000/api/v1/category-news")
+    const categories = useFetch("/api/v1/category-news")
 
     useEffect(() => {
         if (!state) navigate(-1)
@@ -20,7 +20,7 @@ export default function UpdateNews() {
         formData.append("id_news", state.id_news)
 
         try {
-            const res = await myAxios.patch("http://localhost:1000/api/v1/news", formData,
+            const res = await myAxios.patch("/api/v1/news", formData,
                 { headers: { "Content-Type": "multipart/form-data" } })
             toast.success(res.data, {
                 position: "top-center",

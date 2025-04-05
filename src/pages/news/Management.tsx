@@ -11,7 +11,7 @@ export default function NewsManagement() {
     const [pagination, setPagination] = useState<{ currentPage: number; pages: number[] }>({ currentPage: 1, pages: [] })
 
     useEffect(() => {
-        myAxios.get("http://localhost:1000/api/v1/news?page=" + pagination.currentPage)
+        myAxios.get("/api/v1/news?page=" + pagination.currentPage)
             .then(async res => {
                 setPagination({ currentPage: res.data.pagination.currentPage, pages: res.data.pagination.pages })
                 const resData: newsType[] = res.data.news
@@ -118,7 +118,7 @@ const NewsDisplay = ({ news, setIlustrate, dispatch }: {
     const deleteNews = async (id: number) => {
         try {
             if (!confirm("Anda yakin ingin menghapus berita tersebut??")) return
-            const res = await myAxios.delete("http://localhost:1000/api/v1/news/" + id)
+            const res = await myAxios.delete("/api/v1/news/" + id)
             toast.success(res.data, {
                 position: "top-center",
                 autoClose: 5000,

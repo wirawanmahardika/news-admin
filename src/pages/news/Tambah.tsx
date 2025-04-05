@@ -3,13 +3,13 @@ import { Bounce, toast, ToastContainer } from "react-toastify";
 import { myAxios } from "../../utils/axios";
 
 export default function TambahNews() {
-    const categories = useFetch("http://localhost:1000/api/v1/category-news")
+    const categories = useFetch("/api/v1/category-news")
 
     const handlePost = async (e: any) => {
         e.preventDefault()
         const formData = new FormData(e.target)
         try {
-            const res = await myAxios.post("http://localhost:1000/api/v1/news", formData, { headers: { "Content-Type": "multipart/form-data" } })
+            const res = await myAxios.post("/api/v1/news", formData, { headers: { "Content-Type": "multipart/form-data" } })
             toast.success(res.data, {
                 position: "top-center",
                 autoClose: 5000,

@@ -10,7 +10,7 @@ export default function CategoryManagement() {
     const [ilustrate, setIlustrate] = useState<string>("")
 
     useEffect(() => {
-        myAxios.get("http://localhost:1000/api/v1/category-news")
+        myAxios.get("/api/v1/category-news")
             .then(async res => {
                 const resData: categoryType[] = res.data
                 if (resData && resData.length > 0) {
@@ -71,7 +71,7 @@ const CategoriesDisplay = ({ categories, setIlustrate, dispatch }: {
     const deleteNews = async (id: number) => {
         try {
             if (!confirm("Anda yakin ingin menghapus kategori berita tersebut??")) return;
-            const res = await myAxios.delete("http://localhost:1000/api/v1/category-news/" + id)
+            const res = await myAxios.delete("/api/v1/category-news/" + id)
             toast.success(res.data, {
                 position: "top-center",
                 autoClose: 5000,
